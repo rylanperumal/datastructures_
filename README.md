@@ -1,4 +1,4 @@
-# data_struck
+# datastructures
 An assortment of random, potentially harmless data structures.
 </br>
 </br>
