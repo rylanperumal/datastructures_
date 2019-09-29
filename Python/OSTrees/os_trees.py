@@ -275,17 +275,17 @@ class OrderStatisticTree:
                     x = self.root
         x.color = False
 
-    def tree_select(self, x, i):
+    def tree_os_select(self, x, i):
         # initial call ost.tree_select(ost.root, i), i=5
         r = x.left.size + 1
         if i == r:
             return x
         elif i < r:
-            return self.tree_select(x.left, i)
+            return self.tree_os_select(x.left, i)
         else:
-            return self.tree_select(x.right, i-r)
+            return self.tree_os_select(x.right, i-r)
 
-    def tree_rank(self, x):
+    def tree_os_rank(self, x):
         r = x.left.size + 1
         y = x
         while y != self.root:
