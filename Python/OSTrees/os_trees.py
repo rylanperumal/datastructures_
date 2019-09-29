@@ -93,8 +93,8 @@ class OrderStatisticTree:
             x.parent.left = y
         y.right = x
         x.parent = y
-        x.size = y.size
-        y.size = y.left.size + y.right.size
+        y.size = x.size
+        x.size = x.left.size + x.right.size + 1
 
     def tree_insert(self, key):
         z = Node(key)
@@ -104,7 +104,7 @@ class OrderStatisticTree:
         x = self.root
         while x != self.nil:
             y = x
-            x.size += 1
+            y.size += 1
             if z.key < x.key:
                 x = x.left
             else:
@@ -201,11 +201,17 @@ class OrderStatisticTree:
                 self.tree_transplant(y, y.right)
                 y.right = z.right
                 y.right.parent = y
+                temp = x.parent
+                while(temp != y):
+                    temp.size -= 1
+                    temp = temp.parent
+                y.size = y.left.size + 1
 
             self.tree_transplant(z, y)
             y.left = z.left
             y.left.parent = y
             y.color = z.color
+            y.size = y.left.size + y.right.size + 1
         if y_original_color == False:
             self.delete_fixup(x)
 
@@ -414,30 +420,30 @@ if __name__ == "__main__":
     ost.tree_insert(25)
     ost.tree_insert(40)
     ost.tree_insert(80)
-    # ost.tree_insert(90)
-    # ost.tree_insert(32)
-    # ost.tree_insert(44)
-    # ost.tree_insert(56)
-    # ost.tree_insert(70)
-    # ost.tree_insert(101)
-    # ost.tree_insert(20)
-    # ost.tree_insert(9)
-    # ost.tree_insert(11)
-    # ost.tree_insert(67)
-    # ost.tree_insert(84)
-    # ost.tree_insert(45)
-    # ost.tree_insert(85)
-    # ost.tree_insert(19)
-    # ost.tree_insert(33)
-    # ost.tree_insert(34)
-    # ost.tree_insert(6)
-    # ost.tree_insert(1)
-    # ost.tree_insert(200)
-    # ost.tree_insert(300)
-    # ost.tree_insert(400)
-    # ost.tree_insert(500)
-    # ost.tree_insert(600)
-    # ost.tree_insert(700)
+    ost.tree_insert(90)
+    ost.tree_insert(32)
+    ost.tree_insert(44)
+    ost.tree_insert(56)
+    ost.tree_insert(70)
+    ost.tree_insert(101)
+    ost.tree_insert(20)
+    ost.tree_insert(9)
+    ost.tree_insert(11)
+    ost.tree_insert(67)
+    ost.tree_insert(84)
+    ost.tree_insert(45)
+    ost.tree_insert(85)
+    ost.tree_insert(19)
+    ost.tree_insert(33)
+    ost.tree_insert(34)
+    ost.tree_insert(6)
+    ost.tree_insert(1)
+    ost.tree_insert(200)
+    ost.tree_insert(300)
+    ost.tree_insert(400)
+    ost.tree_insert(500)
+    ost.tree_insert(600)
+    ost.tree_insert(700)
 
 
 
