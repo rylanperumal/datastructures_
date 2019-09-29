@@ -93,8 +93,8 @@ class OrderStatisticTree:
             x.parent.left = y
         y.right = x
         x.parent = y
-        y.size = x.size
-        x.size = x.left.size + x.right.size + 1
+        x.size = y.size
+        y.size = y.left.size + y.right.size
 
     def tree_insert(self, key):
         z = Node(key)
@@ -166,9 +166,10 @@ class OrderStatisticTree:
         z = self.nil
         curr_node = self.root
         while curr_node != self.nil:
+            
             if curr_node.key == key:
                 z = curr_node
-
+            
             if curr_node.key <= key:
                 curr_node = curr_node.right
             else:
@@ -176,6 +177,11 @@ class OrderStatisticTree:
         if z == self.nil:
             print("Node does not exist in tree")
             return
+
+        curr_node = z
+        while curr_node != None:
+            curr_node.size -= 1
+            curr_node = curr_node.parent
 
         y = z
         y_original_color = y.color
@@ -262,6 +268,27 @@ class OrderStatisticTree:
                     self.right_rotate(x.parent)
                     x = self.root
         x.color = False
+
+    def tree_select(self, x, i):
+        # initial call ost.tree_select(ost.root, i), i=5
+        r = x.left.size + 1
+        if i == r:
+            return x
+        elif i < r:
+            return self.tree_select(x.left, i)
+        else:
+            return self.tree_select(x.right, i-r)
+
+    def tree_rank(self, x):
+        r = x.left.size + 1
+        y = x
+        while y != self.root:
+            if y == y.parent.right:
+                r = r + y.parent.left.size + 1
+            y = y.parent
+        return r
+
+
 
     def tree_print(self, node, indent, last):
         if node != self.nil:
@@ -387,8 +414,36 @@ if __name__ == "__main__":
     ost.tree_insert(25)
     ost.tree_insert(40)
     ost.tree_insert(80)
+    # ost.tree_insert(90)
+    # ost.tree_insert(32)
+    # ost.tree_insert(44)
+    # ost.tree_insert(56)
+    # ost.tree_insert(70)
+    # ost.tree_insert(101)
+    # ost.tree_insert(20)
+    # ost.tree_insert(9)
+    # ost.tree_insert(11)
+    # ost.tree_insert(67)
+    # ost.tree_insert(84)
+    # ost.tree_insert(45)
+    # ost.tree_insert(85)
+    # ost.tree_insert(19)
+    # ost.tree_insert(33)
+    # ost.tree_insert(34)
+    # ost.tree_insert(6)
+    # ost.tree_insert(1)
+    # ost.tree_insert(200)
+    # ost.tree_insert(300)
+    # ost.tree_insert(400)
+    # ost.tree_insert(500)
+    # ost.tree_insert(600)
+    # ost.tree_insert(700)
+
+
+
     ost.tree_print(ost.root, "", True)
     display_tree(ost)
+    # ost.tree_delete(34)
     ost.tree_delete(25)
     ost.tree_print(ost.root, "", True)
     display_tree(ost)
