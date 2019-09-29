@@ -10,15 +10,18 @@ class Node:
         self.left = None
         self.right = None
         self.key = key
-        self.color = True  # boolean (red or black), new node must be red
+        self.color = True # boolean (True: red or False: black), new node must be red   
+        self.size = 1
 
 
-class RedBlackTree:
+class OrderStatisticTree:
+    # structure inherited from RedBlackTree Class
     def __init__(self):
         self.nil = Node(0)
         self.nil.color = False
         self.nil.left = None
         self.nil.right = None
+        self.nil.size = 0
         self.root = self.nil
 
     def tree_search(self, x, k):
@@ -72,6 +75,9 @@ class RedBlackTree:
             x.parent.right = y
         y.left = x
         x.parent = y
+        y.size = x.size
+        x.size = x.left.size + x.right.size + 1
+
 
     def right_rotate(self, x):
         y = x.left
@@ -87,6 +93,8 @@ class RedBlackTree:
             x.parent.left = y
         y.right = x
         x.parent = y
+        y.size = x.size
+        x.size = x.left.size + x.right.size + 1
 
     def tree_insert(self, key):
         z = Node(key)
@@ -96,6 +104,7 @@ class RedBlackTree:
         x = self.root
         while x != self.nil:
             y = x
+            x.size += 1
             if z.key < x.key:
                 x = x.left
             else:
@@ -112,7 +121,7 @@ class RedBlackTree:
         if z.parent == None:
             z.color = False
             return
-        # if parent's parent is None the nwe just return
+        # if parent's parent is None then we just return
         if z.parent.parent == None:
             return
 
@@ -164,7 +173,6 @@ class RedBlackTree:
                 curr_node = curr_node.right
             else:
                 curr_node = curr_node.left
-
         if z == self.nil:
             print("Node does not exist in tree")
             return
@@ -266,7 +274,7 @@ class RedBlackTree:
                 indent += "|    "
 
             color = "RED" if node.color == True else "BLACK"
-            print(str(node.key) + "(" + color + ")")
+            print(str(node.key) + "(" + color + "  " + str(node.size) + ")")
             self.tree_print(node.left, indent, False)
             self.tree_print(node.right, indent, True)
 
@@ -287,6 +295,8 @@ class RedBlackTree:
             self.tree_draw(node.left, G, color_map)
         if node.right != self.nil:
             self.tree_draw(node.right, G, color_map)
+
+
 
 #######################################################################################################################
 # Visualization Functions
@@ -365,19 +375,21 @@ def display_tree(T, figname=""):
     nx.draw_networkx_labels(G, pos=pos, font_color='w')
     plt.show()
 
+
 if __name__ == "__main__":
 
-    rbt = RedBlackTree()
-    rbt.tree_insert(8)
-    rbt.tree_insert(18)
-    rbt.tree_insert(5)
-    rbt.tree_insert(15)
-    rbt.tree_insert(17)
-    rbt.tree_insert(25)
-    rbt.tree_insert(40)
-    rbt.tree_insert(80)
-    rbt.tree_print(rbt.root, "", True)
-    display_tree(rbt)
-    rbt.tree_delete(25)
-    rbt.tree_print(rbt.root, "", True)
-    display_tree(rbt)
+    ost = OrderStatisticTree()
+    ost.tree_insert(8)
+    ost.tree_insert(18)
+    ost.tree_insert(5)
+    ost.tree_insert(15)
+    ost.tree_insert(17)
+    ost.tree_insert(25)
+    ost.tree_insert(40)
+    ost.tree_insert(80)
+    ost.tree_print(ost.root, "", True)
+    display_tree(ost)
+    ost.tree_delete(25)
+    ost.tree_print(ost.root, "", True)
+    display_tree(ost)
+
