@@ -1,7 +1,11 @@
+from tqdm import tqdm
 import matplotlib.pyplot as plt
 import networkx as nx
+import numpy as np
+import seaborn as sns
 import sys
 import random
+import time
 
 
 class Node:
@@ -258,6 +262,7 @@ class OrderStatisticTree:
                     self.right_rotate(x.parent)
                     w = x.parent.left
 
+                # if w.right != self.nil and w.left != self.nil:
                 if w.right.color == False and w.left.color == False:
                     w.color = True
                     x = x.parent
@@ -411,46 +416,70 @@ def display_tree(T, figname=""):
 
 if __name__ == "__main__":
 
-    ost = OrderStatisticTree()
-    ost.tree_insert(8)
-    ost.tree_insert(18)
-    ost.tree_insert(5)
-    ost.tree_insert(15)
-    ost.tree_insert(17)
-    ost.tree_insert(25)
-    ost.tree_insert(40)
-    ost.tree_insert(80)
-    ost.tree_insert(90)
-    ost.tree_insert(32)
-    ost.tree_insert(44)
-    ost.tree_insert(56)
-    ost.tree_insert(70)
-    ost.tree_insert(101)
-    ost.tree_insert(20)
-    ost.tree_insert(9)
-    ost.tree_insert(11)
-    ost.tree_insert(67)
-    ost.tree_insert(84)
-    ost.tree_insert(45)
-    ost.tree_insert(85)
-    ost.tree_insert(19)
-    ost.tree_insert(33)
-    ost.tree_insert(34)
-    ost.tree_insert(6)
-    ost.tree_insert(1)
-    ost.tree_insert(200)
-    ost.tree_insert(300)
-    ost.tree_insert(400)
-    ost.tree_insert(500)
-    ost.tree_insert(600)
-    ost.tree_insert(700)
+
+    # need to test delete, need to test insert, need to test rank
+
+    # creating a random list of unique integers
+
+
+    n = np.array([10000, 50000, 100000, 150000, 200000])#, 250000, 300000, 350000, 400000, 450000, 500000])
+    avg_times = 100
+
+
+    insert_time = []
+    delete_time = []
+    for i in tqdm(n):
+        avg_ = 0
+        for j in range(avg_times):
+            rb_insert = 0
+            rb_delete = 0
+            # building the tree
+            ost = OrderStatisticTree()
+            rand_array = random.sample(range(1, i*10), i)
+            for k in rand_array:
+                ost.tree_insert(k)
+            random_insert = list(range(1, i*10))
+            # these numbers should not be in the tree
+            random_insert = list(set(random_insert) - set(rand_array))
+            # the running time of one insert O(log(n))
+            for k in random_insert:
+                start = time.time_ns()
+                ost.tree_insert(k)
+                end = time.time_ns()
+                rb_insert += end-start
+            avg_ += rb_insert/len(random_insert)
+        insert_time.append(avg_/avg_times)
+        # delete_time.append(rb_delete/avg_times)
+
+    print(insert_time)
+    x = np.linspace(1, len(n), len(n))
+    print(x)
+    plt.figure(figsize=(8, 5))
+    plt.xlabel('n')
+    plt.ylabel('time (ns)')
+    plt.title('RB Insert')
+    sns.lineplot(x=x, y=insert_time)
+    plt.xticks(n)
+    plt.savefig('rb_insert.png')
+    plt.show() 
+
+    # plt.figure(figsize=(8, 5))
+    # plt.xlabel('n')
+    # plt.ylabel('time (ns)')
+    # plt.title('RB Delete')
+    # plt.plot(x, delete_time)
+    # plt.xticks(n)
+    # plt.savefig('rb_delete.png')
+    # plt.show()      
 
 
 
-    ost.tree_print(ost.root, "", True)
-    display_tree(ost)
+   
+
+    # ost.tree_print(ost.root, "", True)
+    # display_tree(ost)
     # ost.tree_delete(34)
-    ost.tree_delete(25)
-    ost.tree_print(ost.root, "", True)
-    display_tree(ost)
+    # # ost.tree_delete(25)
+    # ost.tree_print(ost.root, "", True)
+    # display_tree(ost)
 
