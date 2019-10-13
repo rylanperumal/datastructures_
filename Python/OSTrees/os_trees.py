@@ -422,8 +422,8 @@ if __name__ == "__main__":
     # creating a random list of unique integers
 
 
-    n = np.array([10000, 50000, 100000, 150000, 200000])#, 250000, 300000, 350000, 400000, 450000, 500000])
-    avg_times = 100
+    n = [10000, 50000, 100000, 150000, 200000]#, 250000, 300000, 350000, 400000, 450000, 500000]
+    avg_times = 20
 
 
     insert_time = []
@@ -458,8 +458,10 @@ if __name__ == "__main__":
     plt.xlabel('n')
     plt.ylabel('time (ns)')
     plt.title('RB Insert')
-    sns.lineplot(x=x, y=insert_time)
-    plt.xticks(n)
+    plt.xticks(x)
+    ax = sns.lineplot(x, insert_time)
+    ax.set_xticklabels(n)
+    # plt.set_xticklabels(n)
     plt.savefig('rb_insert.png')
     plt.show() 
 
