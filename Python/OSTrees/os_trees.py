@@ -432,9 +432,8 @@ def plot_graph(filename, heading, time, n):
 
 if __name__ == "__main__":
 
-    n = np.array([10000, 15000, 20000, 25000, 30000, 35000, 40000, 
-    45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000, 85000, 90000, 95000, 100000])#, 250000, 300000, 350000, 400000, 450000, 500000]
-    avg_times = 25
+    n = np.arange(5000, 105000, 5000)
+    avg_times = 1
 
     insert_time = []
     delete_time = []
@@ -467,9 +466,9 @@ if __name__ == "__main__":
                 nodes.append(node)
                 end_insert = time.time_ns()
 
-                start_select = time.time_ns()
-                ost.tree_os_select(node, 1)
-                end_select = time.time_ns()
+                # start_select = time.time_ns()
+                # ost.tree_os_select(node, 2)
+                # end_select = time.time_ns()
             
                 start_rank = time.time_ns()
                 ost.tree_os_rank(node)
@@ -481,29 +480,29 @@ if __name__ == "__main__":
 
                 rb_insert += end_insert - start_insert
                 rb_delete += end_delete - start_delete
-                os_select += end_select - start_select
+                # os_select += end_select - start_select
                 os_rank += end_rank - start_rank
             
             avg_insert += rb_insert/len(random_insert)
             avg_delete += rb_delete/len(random_insert)
-            avg_select += os_select/len(random_insert)
+            # avg_select += os_select/len(random_insert)
             avg_rank += os_rank/len(random_insert)
         
         insert_time.append(avg_insert/avg_times)
         delete_time.append(avg_delete/avg_times)
-        select_time.append(avg_select/avg_times)
+        # select_time.append(avg_select/avg_times)
         rank_time.append(avg_rank/avg_times)
 
     print(insert_time)
     x = np.linspace(1, len(n), len(n))
     print(x)
     print(delete_time)
-    print(select_time)
+    # print(select_time)
     print(rank_time)
 
     plot_graph('rb_insert', 'RB Insert', insert_time, n)
     plot_graph('rb_delete', 'RB Delete', delete_time, n+1)
-    plot_graph('os_select', 'OS Select', select_time, n)
+    # plot_graph('os_select', 'OS Select', select_time, n)
     plot_graph('os_rank', 'OS Rank', rank_time, n)
 
 
