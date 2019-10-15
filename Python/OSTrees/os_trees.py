@@ -10,6 +10,13 @@ import time
 
 class Node:
     def __init__(self, key):
+        # nil node
+        # self.nil = Node(0)
+        # self.nil.color = False
+        # self.nil.left = None
+        # self.nil.right = None
+        # self.nil.size = 0
+
         self.parent = None
         self.left = None
         self.right = None
@@ -130,6 +137,7 @@ class OrderStatisticTree:
             return
 
         self.insert_fixup(z)
+        return z
 
     def insert_fixup(self, z):
         while z.parent.color == True:
@@ -170,10 +178,8 @@ class OrderStatisticTree:
         z = self.nil
         curr_node = self.root
         while curr_node != self.nil:
-            
             if curr_node.key == key:
                 z = curr_node
-            
             if curr_node.key <= key:
                 curr_node = curr_node.right
             else:
@@ -263,7 +269,8 @@ class OrderStatisticTree:
                     w = x.parent.left
 
                 # if w.right != self.nil and w.left != self.nil:
-                if w.right.color == False and w.left.color == False:
+                
+                if w.right.color == False:# and w.left.color == False:
                     w.color = True
                     x = x.parent
                 else:
@@ -298,8 +305,6 @@ class OrderStatisticTree:
                 r = r + y.parent.left.size + 1
             y = y.parent
         return r
-
-
 
     def tree_print(self, node, indent, last):
         if node != self.nil:
@@ -413,70 +418,94 @@ def display_tree(T, figname=""):
     nx.draw_networkx_labels(G, pos=pos, font_color='w')
     plt.show()
 
+def plot_graph(filename, heading, time, n):
+    x = np.linspace(1, len(n), len(n))
+    plt.figure(figsize=(8, 5))
+    plt.xlabel('n')
+    plt.ylabel('time (ns)')
+    plt.title(heading)
+    plt.xticks(x)
+    ax = sns.lineplot(x, time)
+    ax.set_xticklabels(n)
+    plt.savefig(filename + '.png')
+    plt.show() 
 
 if __name__ == "__main__":
 
-
-    # need to test delete, need to test insert, need to test rank
-
-    # creating a random list of unique integers
-
-
-    n = [10000, 50000, 100000, 150000, 200000]#, 250000, 300000, 350000, 400000, 450000, 500000]
-    avg_times = 20
-
+    n = np.array([10000, 15000, 20000, 25000, 30000, 35000, 40000, 
+    45000, 50000, 55000, 60000, 65000, 70000, 75000, 80000, 85000, 90000, 95000, 100000])#, 250000, 300000, 350000, 400000, 450000, 500000]
+    avg_times = 25
 
     insert_time = []
     delete_time = []
+    select_time = []
+    rank_time = []
     for i in tqdm(n):
-        avg_ = 0
+        avg_insert = 0
+        avg_delete = 0
+        avg_select = 0
+        avg_rank = 0
         for j in range(avg_times):
             rb_insert = 0
             rb_delete = 0
+            os_select = 0
+            os_rank = 0
             # building the tree
             ost = OrderStatisticTree()
             rand_array = random.sample(range(1, i*10), i)
+            nodes = []
             for k in rand_array:
-                ost.tree_insert(k)
+                temp_node = ost.tree_insert(k)
+                nodes.append(temp_node)
             random_insert = list(range(1, i*10))
             # these numbers should not be in the tree
             random_insert = list(set(random_insert) - set(rand_array))
             # the running time of one insert O(log(n))
             for k in random_insert:
-                start = time.time_ns()
-                ost.tree_insert(k)
-                end = time.time_ns()
-                rb_insert += end-start
-            avg_ += rb_insert/len(random_insert)
-        insert_time.append(avg_/avg_times)
-        # delete_time.append(rb_delete/avg_times)
+                start_insert = time.time_ns()
+                node = ost.tree_insert(k)
+                nodes.append(node)
+                end_insert = time.time_ns()
+
+                start_select = time.time_ns()
+                ost.tree_os_select(node, 1)
+                end_select = time.time_ns()
+            
+                start_rank = time.time_ns()
+                ost.tree_os_rank(node)
+                end_rank = time.time_ns()
+
+                start_delete = time.time_ns()
+                ost.tree_delete(k)
+                end_delete = time.time_ns()
+
+                rb_insert += end_insert - start_insert
+                rb_delete += end_delete - start_delete
+                os_select += end_select - start_select
+                os_rank += end_rank - start_rank
+            
+            avg_insert += rb_insert/len(random_insert)
+            avg_delete += rb_delete/len(random_insert)
+            avg_select += os_select/len(random_insert)
+            avg_rank += os_rank/len(random_insert)
+        
+        insert_time.append(avg_insert/avg_times)
+        delete_time.append(avg_delete/avg_times)
+        select_time.append(avg_select/avg_times)
+        rank_time.append(avg_rank/avg_times)
 
     print(insert_time)
     x = np.linspace(1, len(n), len(n))
     print(x)
-    plt.figure(figsize=(8, 5))
-    plt.xlabel('n')
-    plt.ylabel('time (ns)')
-    plt.title('RB Insert')
-    plt.xticks(x)
-    ax = sns.lineplot(x, insert_time)
-    ax.set_xticklabels(n)
-    # plt.set_xticklabels(n)
-    plt.savefig('rb_insert.png')
-    plt.show() 
+    print(delete_time)
+    print(select_time)
+    print(rank_time)
 
-    # plt.figure(figsize=(8, 5))
-    # plt.xlabel('n')
-    # plt.ylabel('time (ns)')
-    # plt.title('RB Delete')
-    # plt.plot(x, delete_time)
-    # plt.xticks(n)
-    # plt.savefig('rb_delete.png')
-    # plt.show()      
+    plot_graph('rb_insert', 'RB Insert', insert_time, n)
+    plot_graph('rb_delete', 'RB Delete', delete_time, n+1)
+    plot_graph('os_select', 'OS Select', select_time, n)
+    plot_graph('os_rank', 'OS Rank', rank_time, n)
 
-
-
-   
 
     # ost.tree_print(ost.root, "", True)
     # display_tree(ost)
