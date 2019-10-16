@@ -418,21 +418,10 @@ def display_tree(T, figname=""):
     nx.draw_networkx_labels(G, pos=pos, font_color='w')
     plt.show()
 
-def plot_graph(filename, heading, time, n):
-    x = np.linspace(1, len(n), len(n))
-    plt.figure(figsize=(8, 5))
-    plt.xlabel('n')
-    plt.ylabel('time (ns)')
-    plt.title(heading)    
-    plt.xticks(x)
-    ax = sns.lineplot(x, time)
-    ax.set_xticklabels(np.arange(min(n), max(n), 20000))
-    plt.savefig(filename + '.png')
-    plt.show() 
 
 if __name__ == "__main__":
 
-    n = np.arange(1000, 201000, 1000)
+    n = np.arange(2000, 101000, 2000)
     avg_times = 1
 
     insert_time = []
