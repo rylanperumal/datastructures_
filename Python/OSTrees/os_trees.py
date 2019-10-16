@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
 import seaborn as sns
+import pandas as pd
 import sys
 import random
 import time
@@ -421,7 +422,10 @@ def display_tree(T, figname=""):
 
 if __name__ == "__main__":
 
-    n = np.arange(2000, 101000, 2000)
+    start = 2000
+    end = 10000
+    step = 2000
+    n = np.arange(start, end, step)
     avg_times = 1
 
     insert_time = []
@@ -477,10 +481,24 @@ if __name__ == "__main__":
             avg_select += os_select/len(random_insert)
             avg_rank += os_rank/len(random_insert)
         
+
         insert_time.append(avg_insert/avg_times)
         delete_time.append(avg_delete/avg_times)
         select_time.append(avg_select/avg_times)
         rank_time.append(avg_rank/avg_times)
+
+
+
+    insert_df = pd.DataFrame({'input': n, 'time': insert_time})
+    delete_df = pd.DataFrame({'input': n, 'time': delete_time})
+    select_df = pd.DataFrame({'input': n, 'time': select_time})
+    rank_df = pd.DataFrame({'input': n, 'time': rank_time})
+
+    insert_df.to_csv('insert.csv', header=True, index=False)
+    delete_df.to_csv('delete.csv', header=True, index=False)
+    select_df.to_csv('select.csv', header=True, index=False)
+    rank_df.to_csv('rank.csv', header=True, index=False)
+
 
     print(insert_time)
     x = np.linspace(1, len(n), len(n))
@@ -489,10 +507,7 @@ if __name__ == "__main__":
     print(select_time)
     print(rank_time)
 
-    plot_graph('rb_insert', 'RB Insert', insert_time, n)
-    plot_graph('rb_delete', 'RB Delete', delete_time, n+1)
-    plot_graph('os_select', 'OS Select', select_time, n)
-    plot_graph('os_rank', 'OS Rank', rank_time, n)
+   
 
 
     # ost.tree_print(ost.root, "", True)

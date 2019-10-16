@@ -12,19 +12,19 @@ first = False
 for i in n:
     datapath = sys.argv[i+2]
     data = np.loadtxt(datapath, delimiter=',', skiprows=1)
-    X = data[:,0]
-    Y = data[:,1]
+    X = data[:, 0]
+    Y = data[:, 1]
     if first:
-        plt.plot(X,Y,label = sys.argv[i+2][:-4])
+        plt.plot(X, Y, label=sys.argv[i+2][:-4])
     else:
         first = True
-        plt.plot(X,Y,label = sys.argv[i+2][:-4])
+        plt.plot(X, Y, label=sys.argv[i+2][:-4])
 
 plt.xlabel('input size (n)')
 plt.ylabel('time (ns)')
-plt.title(title);
+plt.title(title)
 plt.ylim(ymin=0)
 plt.xlim(xmin=0)
-plt.legend(shadow = False, fancybox = True)
-plt.savefig(title +'.png')
+plt.legend(shadow=False, fancybox=True)
+plt.savefig(title + '.png')
 plt.close()
