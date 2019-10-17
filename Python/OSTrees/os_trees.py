@@ -423,10 +423,10 @@ def display_tree(T, figname=""):
 if __name__ == "__main__":
 
     start = 2000
-    end = 10000
+    end = 100000
     step = 2000
     n = np.arange(start, end, step)
-    avg_times = 1
+    avg_times = 10
 
     insert_time = []
     delete_time = []
