@@ -426,7 +426,7 @@ if __name__ == "__main__":
     end = 100000
     step = 2000
     n = np.arange(start, end, step)
-    avg_times = 10
+    avg_times = 1
 
     insert_time = []
     delete_time = []
