@@ -426,7 +426,7 @@ if __name__ == "__main__":
     end = int(input('End: '))
     step = int(input('Step: '))
     n = np.arange(start, end, step)
-    avg_times = 1
+    avg_times = int(input('Averages: '))
 
     insert_time = []
     delete_time = []
@@ -492,7 +492,7 @@ if __name__ == "__main__":
     insert_df = pd.DataFrame({'input': n, 'time': insert_time})
     delete_df = pd.DataFrame({'input': n, 'time': delete_time})
     select_df = pd.DataFrame({'input': n, 'time': select_time})
-    rank_df = pd.DataFrame({'inpute': n, 'time': rank_time})
+    rank_df = pd.DataFrame({'input': n, 'time': rank_time})
 
     insert_df.to_csv('insert.csv', header=True, index=False)
     delete_df.to_csv('delete.csv', header=True, index=False)
