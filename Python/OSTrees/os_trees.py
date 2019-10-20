@@ -440,10 +440,8 @@ if __name__ == "__main__":
         # building the tree
         ost = OrderStatisticTree()
         rand_array = random.sample(range(1, i+1), i)
-        nodes = []
         for k in rand_array:
             temp_node = ost.tree_insert(k)
-            nodes.append(temp_node)
 
         random_insert = list(range(i+1, i*10))
         # these numbers should not be in the tree
@@ -452,33 +450,29 @@ if __name__ == "__main__":
         for j in range(avg_times):
             k = np.random.choice(random_insert)
             # random_insert = np.delete(random_insert, k)
-            start_insert = time.time_ns()
+
+            start_insert = time.process_time()
             node = ost.tree_insert(k)
-            end_insert = time.time_ns()
+            end_insert = time.process_time() - t
             
-            nodes.append(node)
+            # nodes.append(node)
 
-            start_select = time.time_ns()
+            start_select = time.process_time()
             ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
-            end_select = time.time_ns()
+            end_select = time.process_time() - t
         
-            start_rank = time.time_ns()
+            start_rank = time.process_time()
             ost.tree_os_rank(node)
-            end_rank = time.time_ns()
+            end_rank = time.process_time() - t
 
-            start_delete = time.time_ns()
+            start_delete = time.process_time()
             ost.tree_delete(k)
-            end_delete = time.time_ns()
+            end_delete = time.process_time() - t
 
-            rb_insert = end_insert - start_insert
-            rb_delete = end_delete - start_delete
-            os_select = end_select - start_select
-            os_rank = end_rank - start_rank
-            
-            avg_insert += rb_insert
-            avg_delete += rb_delete
-            avg_select += os_select
-            avg_rank += os_rank
+            avg_insert += end_insert
+            avg_delete += end_delete
+            avg_select += end_select
+            avg_rank += end_rank
         
         insert_time.append(avg_insert/avg_times)
         delete_time.append(avg_delete/avg_times)
