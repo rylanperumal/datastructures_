@@ -453,21 +453,21 @@ if __name__ == "__main__":
 
             start_insert = time.process_time()
             node = ost.tree_insert(k)
-            end_insert = time.process_time() - t
+            end_insert = time.process_time() - start_insert
             
             # nodes.append(node)
 
             start_select = time.process_time()
             ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
-            end_select = time.process_time() - t
+            end_select = time.process_time() - start_select
         
             start_rank = time.process_time()
             ost.tree_os_rank(node)
-            end_rank = time.process_time() - t
+            end_rank = time.process_time() - start_rank
 
             start_delete = time.process_time()
             ost.tree_delete(k)
-            end_delete = time.process_time() - t
+            end_delete = time.process_time() - start_delete
 
             avg_insert += end_insert
             avg_delete += end_delete
