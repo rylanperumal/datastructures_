@@ -456,56 +456,56 @@ if __name__ == "__main__":
             for k in random_insert:
                 start_insert = time.time_ns()
                 node = ost.tree_insert(k)
-                nodes.append(node)
                 end_insert = time.time_ns()
+                nodes.append(node)
 
-                start_select = time.time_ns()
-                ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
-                end_select = time.time_ns()
+                #start_select = time.time_ns()
+                #ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
+                #end_select = time.time_ns()
             
-                start_rank = time.time_ns()
-                ost.tree_os_rank(node)
-                end_rank = time.time_ns()
+                #start_rank = time.time_ns()
+                #ost.tree_os_rank(node)
+                #end_rank = time.time_ns()
 
-                start_delete = time.time_ns()
-                ost.tree_delete(k)
-                end_delete = time.time_ns()
+                #start_delete = time.time_ns()
+                #ost.tree_delete(k)
+                #end_delete = time.time_ns()
 
                 rb_insert += end_insert - start_insert
-                rb_delete += end_delete - start_delete
-                os_select += end_select - start_select
-                os_rank += end_rank - start_rank
+                #rb_delete += end_delete - start_delete
+                #os_select += end_select - start_select
+                #os_rank += end_rank - start_rank
             
             avg_insert += rb_insert/len(random_insert)
-            avg_delete += rb_delete/len(random_insert)
-            avg_select += os_select/len(random_insert)
-            avg_rank += os_rank/len(random_insert)
+            #avg_delete += rb_delete/len(random_insert)
+            #avg_select += os_select/len(random_insert)
+            #avg_rank += os_rank/len(random_insert)
         
 
         insert_time.append(avg_insert/avg_times)
-        delete_time.append(avg_delete/avg_times)
-        select_time.append(avg_select/avg_times)
-        rank_time.append(avg_rank/avg_times)
+        #delete_time.append(avg_delete/avg_times)
+        #select_time.append(avg_select/avg_times)
+        #rank_time.append(avg_rank/avg_times)
 
 
 
     insert_df = pd.DataFrame({'input': n, 'time': insert_time})
-    delete_df = pd.DataFrame({'input': n, 'time': delete_time})
-    select_df = pd.DataFrame({'input': n, 'time': select_time})
-    rank_df = pd.DataFrame({'input': n, 'time': rank_time})
+    #delete_df = pd.DataFrame({'input': n, 'time': delete_time})
+    #select_df = pd.DataFrame({'input': n, 'time': select_time})
+    #rank_df = pd.DataFrame({'input': n, 'time': rank_time})
 
     insert_df.to_csv('insert.csv', header=True, index=False)
-    delete_df.to_csv('delete.csv', header=True, index=False)
-    select_df.to_csv('select.csv', header=True, index=False)
-    rank_df.to_csv('rank.csv', header=True, index=False)
+    #delete_df.to_csv('delete.csv', header=True, index=False)
+    #select_df.to_csv('select.csv', header=True, index=False)
+    #rank_df.to_csv('rank.csv', header=True, index=False)
 
 
-    print(insert_time)
-    x = np.linspace(1, len(n), len(n))
-    print(x)
-    print(delete_time)
-    print(select_time)
-    print(rank_time)
+    #print(insert_time)
+    #x = np.linspace(1, len(n), len(n))
+    #print(x)
+    #print(delete_time)
+    #print(select_time)
+    #print(rank_time)
 
    
 
