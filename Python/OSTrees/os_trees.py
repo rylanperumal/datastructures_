@@ -452,6 +452,7 @@ if __name__ == "__main__":
             random_insert = list(range(1, i*10))
             # these numbers should not be in the tree
             random_insert = list(set(random_insert) - set(rand_array))
+            np.random.shuffle(random_insert)
             # the running time of one insert O(log(n))
             for k in random_insert:
                 start_insert = time.time_ns()
