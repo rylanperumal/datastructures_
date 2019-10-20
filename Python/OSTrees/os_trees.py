@@ -439,22 +439,23 @@ if __name__ == "__main__":
         avg_rank = 0
         # building the tree
         ost = OrderStatisticTree()
-        rand_array = random.sample(range(1, i*10), i)
+        rand_array = random.sample(range(1, i+1), i)
         nodes = []
         for k in rand_array:
-            temp_node = ost.tree_insert(k)
-            nodes.append(temp_node)
-        random_insert = list(range(1, i*10))
+			temp_node = ost.tree_insert(k)
+			nodes.append(temp_node)
+		random_insert = list(range(i+1, i*10))
         # these numbers should not be in the tree
         random_insert = list(set(random_insert) - set(rand_array))
         np.random.shuffle(random_insert)
         for j in range(avg_times):
-            k = np.random.choice(random_insert)
-            # random_insert = np.delete(random_insert, k)
-            start_insert = time.time_ns()
-            node = ost.tree_insert(k)
-            end_insert = time.time_ns()
-            nodes.append(node)
+			k = np.random.choice(random_insert)
+			# random_insert = np.delete(random_insert, k)
+			start_insert = time.time_ns()
+			node = ost.tree_insert(k)
+			end_insert = time.time_ns()
+            
+			nodes.append(node)
 
             start_select = time.time_ns()
             ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
