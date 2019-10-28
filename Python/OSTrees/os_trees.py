@@ -451,23 +451,24 @@ if __name__ == "__main__":
             k = np.random.choice(random_insert)
             # random_insert = np.delete(random_insert, k)
 
-            start_insert = time.process_time()
+            start_insert = time.time_ns()
             node = ost.tree_insert(k)
-            end_insert = time.process_time() - start_insert
+            end_insert = time.time_ns() - start_insert
             
             # nodes.append(node)
 
-            start_select = time.process_time()
-            ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
-            end_select = time.process_time() - start_select
+            start_select = time.time_ns()
+            #ost.tree_os_select(ost.root, 5)
+            ost.tree_os_select(ost.root, np.random.choice(np.arange(1, 20)))
+            end_select = time.time_ns() - start_select
         
-            start_rank = time.process_time()
+            start_rank = time.time_ns()
             ost.tree_os_rank(node)
-            end_rank = time.process_time() - start_rank
+            end_rank = time.time_ns() - start_rank
 
-            start_delete = time.process_time()
+            start_delete = time.time_ns()
             ost.tree_delete(k)
-            end_delete = time.process_time() - start_delete
+            end_delete = time.time_ns() - start_delete
 
             avg_insert += end_insert
             avg_delete += end_delete
