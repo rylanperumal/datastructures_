@@ -7,6 +7,7 @@ import pandas as pd
 import sys
 import random
 import time
+import math
 
 
 class Node:
@@ -22,7 +23,7 @@ class Node:
         self.left = None
         self.right = None
         self.key = key
-        self.color = True # boolean (True: red or False: black), new node must be red   
+        self.color = True # boolean (True: red or False: black), new node must be red
         self.size = 1
 
 
@@ -270,7 +271,7 @@ class OrderStatisticTree:
                     w = x.parent.left
 
                 # if w.right != self.nil and w.left != self.nil:
-                
+
                 if w.right.color == False:# and w.left.color == False:
                     w.color = True
                     x = x.parent
@@ -348,20 +349,20 @@ class OrderStatisticTree:
 def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter = 0.5):
 
     '''
-    From Joel's answer at https://stackoverflow.com/a/29597209/2966723.  
-    Licensed under Creative Commons Attribution-Share Alike 
+    From Joel's answer at https://stackoverflow.com/a/29597209/2966723.
+    Licensed under Creative Commons Attribution-Share Alike
 
-    If the graph is a tree this will return the positions to plot this in a 
+    If the graph is a tree this will return the positions to plot this in a
     hierarchical layout.
 
     G: the graph (must be a tree)
 
-    root: the root node of current branch 
-    - if the tree is directed and this is not given, 
+    root: the root node of current branch
+    - if the tree is directed and this is not given,
       the root will be found and used
-    - if the tree is directed and this is given, then 
+    - if the tree is directed and this is given, then
       the positions will be just for the descendants of this node.
-    - if the tree is undirected and not given, 
+    - if the tree is undirected and not given,
       then a random choice will be used.
 
     width: horizontal space allocated for this branch - avoids overlap with other branches
@@ -396,13 +397,13 @@ def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter 
             pos[root] = (xcenter, vert_loc)
         children = list(G.neighbors(root))
         if not isinstance(G, nx.DiGraph) and parent is not None:
-            children.remove(parent)  
+            children.remove(parent)
         if len(children)!=0:
-            dx = width/len(children) 
+            dx = width/len(children)
             nextx = xcenter - width/2 - dx/2
             for child in children:
                 nextx += dx
-                pos = _hierarchy_pos(G,child, width = dx, vert_gap = vert_gap, 
+                pos = _hierarchy_pos(G,child, width = dx, vert_gap = vert_gap,
                                     vert_loc = vert_loc-vert_gap, xcenter=nextx,
                                     pos=pos, parent = root)
         return pos
@@ -439,11 +440,12 @@ if __name__ == "__main__":
         avg_rank = 0
         # building the tree
         ost = OrderStatisticTree()
-        rand_array = random.sample(range(1, i+1), i)
+        rand_array = random.sample(range(1, i*100), i)
+        nodes = []
         for k in rand_array:
             temp_node = ost.tree_insert(k)
-
-        random_insert = list(range(i+1, i*10))
+            #nodes.append(temp_node)
+        random_insert = list(range(1, i*100))
         # these numbers should not be in the tree
         random_insert = list(set(random_insert) - set(rand_array))
         np.random.shuffle(random_insert)
@@ -451,30 +453,31 @@ if __name__ == "__main__":
             k = np.random.choice(random_insert)
             # random_insert = np.delete(random_insert, k)
 
-            start_insert = time.time_ns()
+            start_insert = time.time()
             node = ost.tree_insert(k)
-            end_insert = time.time_ns() - start_insert
-            
+            end_insert = time.time() - start_insert
+
             # nodes.append(node)
 
-            start_select = time.time_ns()
+            start_select = time.time()
             #ost.tree_os_select(ost.root, 5)
-            ost.tree_os_select(ost.root, np.random.choice(np.arange(1, 20)))
-            end_select = time.time_ns() - start_select
-        
-            start_rank = time.time_ns()
-            ost.tree_os_rank(node)
-            end_rank = time.time_ns() - start_rank
+            ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
+            end_select = time.time() - start_select
 
-            start_delete = time.time_ns()
+            start_rank = time.time()
+            ost.tree_os_rank(node)
+            end_rank = time.time() - start_rank
+
+            start_delete = time.time()
             ost.tree_delete(k)
-            end_delete = time.time_ns() - start_delete
+            end_delete = time.time() - start_delete
+
 
             avg_insert += end_insert
             avg_delete += end_delete
             avg_select += end_select
             avg_rank += end_rank
-        
+
         insert_time.append(avg_insert/avg_times)
         delete_time.append(avg_delete/avg_times)
         select_time.append(avg_select/avg_times)
@@ -483,9 +486,9 @@ if __name__ == "__main__":
 
 
     insert_df = pd.DataFrame({'input': n, 'time': insert_time})
-    delete_df = pd.DataFrame({'input': n, 'time': delete_time})
-    select_df = pd.DataFrame({'input': n, 'time': select_time})
-    rank_df = pd.DataFrame({'input': n, 'time': rank_time})
+    delete_df = pd.DataFrame({'input': n+1, 'time': delete_time})
+    select_df = pd.DataFrame({'input': n+1, 'time': select_time})
+    rank_df = pd.DataFrame({'input': n+1, 'time': rank_time})
 
     insert_df.to_csv('insert.csv', header=True, index=False)
     delete_df.to_csv('delete.csv', header=True, index=False)
@@ -500,7 +503,7 @@ if __name__ == "__main__":
     #print(select_time)
     #print(rank_time)
 
-   
+
 
 
     # ost.tree_print(ost.root, "", True)
@@ -509,4 +512,3 @@ if __name__ == "__main__":
     # # ost.tree_delete(25)
     # ost.tree_print(ost.root, "", True)
     # display_tree(ost)
-
