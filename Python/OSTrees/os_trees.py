@@ -425,90 +425,58 @@ def display_tree(T, filename='test.png', save=False):
 
 if __name__ == "__main__":
 
+    start = int(input('Start: '))
+    end = int(input('End: '))
+    step = int(input('Step: '))
+    n = np.arange(start, end, step)
+    avg_times = int(input('Averages: '))
 
-    ost = OrderStatisticTree()
-    array = np.array([22, 33, 4, 5, 6, 7, 8, 55, 3, 2, 1, 6, 6, 7, 7, 6, 4, 200, 70, 6, 7])
-    for a in array:
-        ost.tree_insert(a)
+    insert_time = []
+    delete_time = []
+    select_time = []
+    rank_time = []
+    for i in tqdm(n):
+        avg_insert = 0
+        avg_delete = 0
+        avg_select = 0
+        avg_rank = 0
+        # building the tree
+        ost = OrderStatisticTree()
+        rand_array = random.sample(range(1, i+1), i)
+        for k in rand_array:
+            temp_node = ost.tree_insert(k)
 
+        random_insert = list(range(i+1, i*10))
+        # these numbers should not be in the tree
+        random_insert = list(set(random_insert) - set(rand_array))
+        np.random.shuffle(random_insert)
+        for j in range(avg_times):
+            k = np.random.choice(random_insert)
+            # random_insert = np.delete(random_insert, k)
 
-    ost.tree_print(ost.root, "", True)
-    for i in range(1, 23):
-        node = ost.tree_os_select(ost.root, i)
-        print(i, node.key)
-    # ost.tree_insert(34)
-    # ost.tree_insert(13)
-    # ost.tree_insert(8)
-    # ost.tree_insert(21)
-    # ost.tree_insert(15)
-    # ost.tree_insert(30)
-    # ost.tree_insert(100)
-    # ost.tree_insert(3)
-    # ost.tree_insert(12)
-    # ost.tree_insert(14)
-    # ost.tree_insert(19)
-    # ost.tree_insert(16)
-    # ost.tree_insert(17)
-    # display_tree(ost, save=True, filename='original.png')
-    # ost.tree_insert(80)
-    # display_tree(ost, save=True, filename='insert.png')
-    # ost.tree_print(ost.root, "", True)
-    # ost.tree_delete(8)
-    # display_tree(ost, save=True, filename='delete.png')
-    # ost.tree_print(ost.root, "", True)    
-    # bst.pretty_print()
-
-    # start = int(input('Start: '))
-    # end = int(input('End: '))
-    # step = int(input('Step: '))
-    # n = np.arange(start, end, step)
-    # avg_times = int(input('Averages: '))
-
-    # insert_time = []
-    # delete_time = []
-    # select_time = []
-    # rank_time = []
-    # for i in tqdm(n):
-    #     avg_insert = 0
-    #     avg_delete = 0
-    #     avg_select = 0
-    #     avg_rank = 0
-    #     # building the tree
-    #     ost = OrderStatisticTree()
-    #     rand_array = random.sample(range(1, i+1), i)
-    #     for k in rand_array:
-    #         temp_node = ost.tree_insert(k)
-
-    #     random_insert = list(range(i+1, i*10))
-    #     # these numbers should not be in the tree
-    #     random_insert = list(set(random_insert) - set(rand_array))
-    #     np.random.shuffle(random_insert)
-    #     for j in range(avg_times):
-    #         k = np.random.choice(random_insert)
-    #         # random_insert = np.delete(random_insert, k)
-
-    #         start_insert = time.process_time()
-    #         node = ost.tree_insert(k)
-    #         end_insert = time.process_time() - start_insert
+            start_insert = time.time_ns()
+            node = ost.tree_insert(k)
+            end_insert = time.time_ns() - start_insert
             
     #         # nodes.append(node)
 
-    #         start_select = time.process_time()
-    #         ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
-    #         end_select = time.process_time() - start_select
+            start_select = time.time_ns()
+            #ost.tree_os_select(ost.root, 5)
+            ost.tree_os_select(ost.root, np.random.choice(np.arange(1, 20)))
+            end_select = time.time_ns() - start_select
         
-    #         start_rank = time.process_time()
-    #         ost.tree_os_rank(node)
-    #         end_rank = time.process_time() - start_rank
+            start_rank = time.time_ns()
+            ost.tree_os_rank(node)
+            end_rank = time.time_ns() - start_rank
 
-    #         start_delete = time.process_time()
-    #         ost.tree_delete(k)
-    #         end_delete = time.process_time() - start_delete
+            start_delete = time.time_ns()
+            ost.tree_delete(k)
+            end_delete = time.time_ns() - start_delete
 
-    #         avg_insert += end_insert
-    #         avg_delete += end_delete
-    #         avg_select += end_select
-    #         avg_rank += end_rank
+            avg_insert += end_insert
+            avg_delete += end_delete
+            avg_select += end_select
+            avg_rank += end_rank
         
     #     insert_time.append(avg_insert/avg_times)
     #     delete_time.append(avg_delete/avg_times)
