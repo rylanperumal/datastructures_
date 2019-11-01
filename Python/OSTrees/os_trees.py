@@ -410,89 +410,125 @@ def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter 
 
     return _hierarchy_pos(G, root, width, vert_gap, vert_loc, xcenter)
 
-def display_tree(T, figname=""):
+def display_tree(T, filename='test.png', save=False):
     G = nx.Graph()
     color_map = []
     T.tree_draw(T.root, G, color_map)
     pos = hierarchy_pos(G, str(T.root.key))
     nx.draw(G, pos=pos, node_color=color_map)
     nx.draw_networkx_labels(G, pos=pos, font_color='w')
+    plt.savefig(filename)
     plt.show()
+    # if save:
+    # plt.show()
 
 
 if __name__ == "__main__":
 
-    start = int(input('Start: '))
-    end = int(input('End: '))
-    step = int(input('Step: '))
-    n = np.arange(start, end, step)
-    avg_times = int(input('Averages: '))
 
-    insert_time = []
-    delete_time = []
-    select_time = []
-    rank_time = []
-    for i in tqdm(n):
-        avg_insert = 0
-        avg_delete = 0
-        avg_select = 0
-        avg_rank = 0
-        # building the tree
-        ost = OrderStatisticTree()
-        rand_array = random.sample(range(1, i+1), i)
-        for k in rand_array:
-            temp_node = ost.tree_insert(k)
+    ost = OrderStatisticTree()
+    array = np.array([22, 33, 4, 5, 6, 7, 8, 55, 3, 2, 1, 6, 6, 7, 7, 6, 4, 200, 70, 6, 7])
+    for a in array:
+        ost.tree_insert(a)
 
-        random_insert = list(range(i+1, i*10))
-        # these numbers should not be in the tree
-        random_insert = list(set(random_insert) - set(rand_array))
-        np.random.shuffle(random_insert)
-        for j in range(avg_times):
-            k = np.random.choice(random_insert)
-            # random_insert = np.delete(random_insert, k)
 
-            start_insert = time.process_time()
-            node = ost.tree_insert(k)
-            end_insert = time.process_time() - start_insert
+    ost.tree_print(ost.root, "", True)
+    for i in range(1, 23):
+        node = ost.tree_os_select(ost.root, i)
+        print(i, node.key)
+    # ost.tree_insert(34)
+    # ost.tree_insert(13)
+    # ost.tree_insert(8)
+    # ost.tree_insert(21)
+    # ost.tree_insert(15)
+    # ost.tree_insert(30)
+    # ost.tree_insert(100)
+    # ost.tree_insert(3)
+    # ost.tree_insert(12)
+    # ost.tree_insert(14)
+    # ost.tree_insert(19)
+    # ost.tree_insert(16)
+    # ost.tree_insert(17)
+    # display_tree(ost, save=True, filename='original.png')
+    # ost.tree_insert(80)
+    # display_tree(ost, save=True, filename='insert.png')
+    # ost.tree_print(ost.root, "", True)
+    # ost.tree_delete(8)
+    # display_tree(ost, save=True, filename='delete.png')
+    # ost.tree_print(ost.root, "", True)    
+    # bst.pretty_print()
+
+    # start = int(input('Start: '))
+    # end = int(input('End: '))
+    # step = int(input('Step: '))
+    # n = np.arange(start, end, step)
+    # avg_times = int(input('Averages: '))
+
+    # insert_time = []
+    # delete_time = []
+    # select_time = []
+    # rank_time = []
+    # for i in tqdm(n):
+    #     avg_insert = 0
+    #     avg_delete = 0
+    #     avg_select = 0
+    #     avg_rank = 0
+    #     # building the tree
+    #     ost = OrderStatisticTree()
+    #     rand_array = random.sample(range(1, i+1), i)
+    #     for k in rand_array:
+    #         temp_node = ost.tree_insert(k)
+
+    #     random_insert = list(range(i+1, i*10))
+    #     # these numbers should not be in the tree
+    #     random_insert = list(set(random_insert) - set(rand_array))
+    #     np.random.shuffle(random_insert)
+    #     for j in range(avg_times):
+    #         k = np.random.choice(random_insert)
+    #         # random_insert = np.delete(random_insert, k)
+
+    #         start_insert = time.process_time()
+    #         node = ost.tree_insert(k)
+    #         end_insert = time.process_time() - start_insert
             
-            # nodes.append(node)
+    #         # nodes.append(node)
 
-            start_select = time.process_time()
-            ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
-            end_select = time.process_time() - start_select
+    #         start_select = time.process_time()
+    #         ost.tree_os_select(ost.root, np.random.choice(np.arange(1, i)))
+    #         end_select = time.process_time() - start_select
         
-            start_rank = time.process_time()
-            ost.tree_os_rank(node)
-            end_rank = time.process_time() - start_rank
+    #         start_rank = time.process_time()
+    #         ost.tree_os_rank(node)
+    #         end_rank = time.process_time() - start_rank
 
-            start_delete = time.process_time()
-            ost.tree_delete(k)
-            end_delete = time.process_time() - start_delete
+    #         start_delete = time.process_time()
+    #         ost.tree_delete(k)
+    #         end_delete = time.process_time() - start_delete
 
-            avg_insert += end_insert
-            avg_delete += end_delete
-            avg_select += end_select
-            avg_rank += end_rank
+    #         avg_insert += end_insert
+    #         avg_delete += end_delete
+    #         avg_select += end_select
+    #         avg_rank += end_rank
         
-        insert_time.append(avg_insert/avg_times)
-        delete_time.append(avg_delete/avg_times)
-        select_time.append(avg_select/avg_times)
-        rank_time.append(avg_rank/avg_times)
+    #     insert_time.append(avg_insert/avg_times)
+    #     delete_time.append(avg_delete/avg_times)
+    #     select_time.append(avg_select/avg_times)
+    #     rank_time.append(avg_rank/avg_times)
 
 
 
-    insert_df = pd.DataFrame({'input': n, 'time': insert_time})
-    delete_df = pd.DataFrame({'input': n, 'time': delete_time})
-    select_df = pd.DataFrame({'input': n, 'time': select_time})
-    rank_df = pd.DataFrame({'input': n, 'time': rank_time})
+    # insert_df = pd.DataFrame({'input': n, 'time': insert_time})
+    # delete_df = pd.DataFrame({'input': n, 'time': delete_time})
+    # select_df = pd.DataFrame({'input': n, 'time': select_time})
+    # rank_df = pd.DataFrame({'input': n, 'time': rank_time})
 
-    insert_df.to_csv('insert.csv', header=True, index=False)
-    delete_df.to_csv('delete.csv', header=True, index=False)
-    select_df.to_csv('select.csv', header=True, index=False)
-    rank_df.to_csv('rank.csv', header=True, index=False)
+    # insert_df.to_csv('insert.csv', header=True, index=False)
+    # delete_df.to_csv('delete.csv', header=True, index=False)
+    # select_df.to_csv('select.csv', header=True, index=False)
+    # rank_df.to_csv('rank.csv', header=True, index=False)
 
 
-    #print(insert_time)
+    # print(insert_time)
     #x = np.linspace(1, len(n), len(n))
     #print(x)
     #print(delete_time)
