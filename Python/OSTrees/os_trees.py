@@ -411,14 +411,17 @@ def hierarchy_pos(G, root=None, width=1., vert_gap = 0.2, vert_loc = 0, xcenter 
 
     return _hierarchy_pos(G, root, width, vert_gap, vert_loc, xcenter)
 
-def display_tree(T, figname=""):
+def display_tree(T, filename='test.png', save=False):
     G = nx.Graph()
     color_map = []
     T.tree_draw(T.root, G, color_map)
     pos = hierarchy_pos(G, str(T.root.key))
     nx.draw(G, pos=pos, node_color=color_map)
     nx.draw_networkx_labels(G, pos=pos, font_color='w')
+    plt.savefig(filename)
     plt.show()
+    # if save:
+    # plt.show()
 
 
 if __name__ == "__main__":
@@ -490,13 +493,13 @@ if __name__ == "__main__":
     select_df = pd.DataFrame({'input': n+1, 'time': select_time})
     rank_df = pd.DataFrame({'input': n+1, 'time': rank_time})
 
-    insert_df.to_csv('insert.csv', header=True, index=False)
-    delete_df.to_csv('delete.csv', header=True, index=False)
-    select_df.to_csv('select.csv', header=True, index=False)
-    rank_df.to_csv('rank.csv', header=True, index=False)
+    # insert_df.to_csv('insert.csv', header=True, index=False)
+    # delete_df.to_csv('delete.csv', header=True, index=False)
+    # select_df.to_csv('select.csv', header=True, index=False)
+    # rank_df.to_csv('rank.csv', header=True, index=False)
 
 
-    #print(insert_time)
+    # print(insert_time)
     #x = np.linspace(1, len(n), len(n))
     #print(x)
     #print(delete_time)
